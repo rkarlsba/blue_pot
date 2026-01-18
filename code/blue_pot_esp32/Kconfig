@@ -1,0 +1,41 @@
+# Kconfig for Blue POT ESP32 Project
+
+menu "Blue POT Configuration"
+
+    config BT_UART_NUM
+        int "Bluetooth UART Number"
+        default 2
+        range 0 2
+        help
+            UART number for BM64 Bluetooth module communication
+
+    config BT_UART_BAUD
+        int "Bluetooth UART Baud Rate"
+        default 115200
+        range 9600 1000000
+        help
+            Baud rate for BM64 communication (typically 115200)
+
+    config POTS_SAMPLE_RATE
+        int "POTS Audio Sample Rate (Hz)"
+        default 8000
+        range 8000 44100
+        help
+            Audio sampling rate for DTMF detection and tone generation
+
+    config ENABLE_VERBOSE_LOGGING
+        bool "Enable Verbose Logging by Default"
+        default n
+        help
+            Enable detailed debug logging of Bluetooth packets on startup
+
+    config DTMF_DETECTION_METHOD
+        int "DTMF Detection Method"
+        default 0
+        range 0 2
+        help
+            0 = Threshold-based (simple, current implementation)
+            1 = Goertzel algorithm (recommended)
+            2 = FFT-based (better, requires more CPU)
+
+endmenu
