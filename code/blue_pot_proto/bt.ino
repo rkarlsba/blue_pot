@@ -8,7 +8,6 @@
  *  
  */
 
-
 // ==============================================================================
 // Pin assignments - BM64 HCI Serial connected to Teensy Serial1
 //
@@ -16,8 +15,6 @@ const int PIN_RSTN = 5;   // Active Low BM64 Reset - Active High/Low
 const int PIN_EAN  = 6;   // BM64 EAN configuration Input - Active High / Tri-state Low
 const int PIN_P2_0 = 7;   // BM64 Configuration Input - Tri-state High / Active Low
 const int PIN_MFB  = 8;   // Active High BM64 Multi-Function Button Input - Active High/Low
-
-
 
 // ==============================================================================
 // Constants
@@ -29,8 +26,6 @@ const int PIN_MFB  = 8;   // Active High BM64 Multi-Function Button Input - Acti
 
 // Interval to attempt to reconnect to the specified pairing when bluettooth is disconnected
 #define BT_RECONNECT_MSEC 60000
-
-
 
 // ==============================================================================
 // Variables
@@ -67,8 +62,6 @@ uint8_t bt_tx_pkt_buf[32];
 int bt_dial_index;
 int bt_dial_array[NUM_VALID_DIGITS];
 
-
-
 // ==============================================================================
 // Bluetooth API
 //
@@ -93,7 +86,6 @@ void btInit(int n) {
   // Finally initialize our evaluation time
   bt_prev_evalT = millis();
 }
-
 
 void btEval() {
   bool off_hook;
@@ -220,11 +212,9 @@ void btEval() {
   }
 }
 
-
 void btSetPairingNumber(int n) {
   bt_link_device_index = n & 0x07;
 }
-
 
 void btSetVerboseLogging(bool b) {
   bt_verbose_logging = b;
@@ -248,8 +238,6 @@ void btSendGenericPacket(uint8_t* pktP, int l) {
   _btSendTxPacket(l);
 }
 
-
-
 // ==============================================================================
 // Bluetooth subroutines
 //
@@ -263,11 +251,9 @@ void _btInitPins() {
   digitalWrite(PIN_MFB, LOW);
 }
 
-
 void _btSetResetPin(int v) {
     digitalWrite(PIN_RSTN, v);
 }
-
 
 void _btSetEanPin(int v) {
   if (v == HIGH) {
@@ -279,7 +265,6 @@ void _btSetEanPin(int v) {
   }
 }
 
-
 void _btSetP2_0Pin(int v) {
   if (v == HIGH) {
     digitalWrite(PIN_P2_0, HIGH);
@@ -290,11 +275,9 @@ void _btSetP2_0Pin(int v) {
   }
 }
 
-
 void _btSetMfbPin(int v) {
   digitalWrite(PIN_MFB, v);
 }
-
 
 void _btSetMode(int m) {
   switch (m) {
@@ -319,7 +302,6 @@ void _btSetMode(int m) {
   }
 }
 
-
 void _btDoReset(bool set_mfb) {
   if (set_mfb) {
     _btSetMfbPin(LOW);
@@ -336,7 +318,6 @@ void _btDoReset(bool set_mfb) {
 
   _btSetResetPin(HIGH);  
 }
-
 
 boolean _btEvalTimeout() {
   unsigned long curT = millis();
@@ -356,7 +337,6 @@ boolean _btEvalTimeout() {
 
   return false;
 }
-
 
 //void _btSetState(bt_stateT s) {
 void _btSetState(int s) {
@@ -402,8 +382,6 @@ void _btSetState(int s) {
 
   bt_state = (bt_stateT) s;
 }
-
-
 
 void _btProcessRxData(uint8_t d) {
   switch (bt_rx_pkt_state) {
@@ -484,7 +462,6 @@ void _btProcessRxData(uint8_t d) {
   }
 }
 
-
 void _btProcessRxPkt() {
   switch (bt_rx_pkt_buf[4]) {
     case 0x01: // BTM_Status
@@ -519,7 +496,6 @@ void _btProcessRxPkt() {
       Serial.println(bt_call_state_name[(int) bt_call_state]);
       break;
 
-
     case 0x03: // Caller_ID
       Serial.print("Caller ID: ");
       for (int i=0; i<(bt_rx_pkt_buf[3]-2); i++) {
@@ -530,13 +506,11 @@ void _btProcessRxPkt() {
   }
 }
 
-
 void _btSendEventAck(uint8_t id) {
   bt_tx_pkt_buf[0] = 0x14;
   bt_tx_pkt_buf[1] = id;
   _btSendTxPacket(2);
 }
-
 
 void _btSendLinkToSelectedDeviceIndex() {
   bt_tx_pkt_buf[0] = 0x17;  // Profile_Link_Back
@@ -546,7 +520,6 @@ void _btSendLinkToSelectedDeviceIndex() {
   _btSendTxPacket(4);
 }
 
-
 void _btSendAcceptCall() {
   bt_tx_pkt_buf[0] = 0x02;
   bt_tx_pkt_buf[1] = 0x00;
@@ -554,14 +527,12 @@ void _btSendAcceptCall() {
   _btSendTxPacket(3);
 }
 
-
 void _btSendDropCall() {
   bt_tx_pkt_buf[0] = 0x02;
   bt_tx_pkt_buf[1] = 0x00;
   bt_tx_pkt_buf[2] = 0x06;
   _btSendTxPacket(3);
 }
-
 
 void _btSendDialNumber() {
   int i;
@@ -581,7 +552,6 @@ void _btSendDialNumber() {
   _btSendTxPacket(12);
 }
 
-
 void _btSendVoiceDial() {
   bt_tx_pkt_buf[0] = 0x02;
   bt_tx_pkt_buf[1] = 0x00;
@@ -589,14 +559,12 @@ void _btSendVoiceDial() {
   _btSendTxPacket(3);
 }
 
-
 void _btSendSetSpeakerGain(uint8_t g) {
   bt_tx_pkt_buf[0] = 0x1B;
   bt_tx_pkt_buf[1] = 0x00;
   bt_tx_pkt_buf[2] = g & 0x0F;
   _btSendTxPacket(3);
 }
-
 
 void _btSendTxPacket(uint16_t l) {
   uint16_t i;
@@ -633,7 +601,6 @@ void _btSendTxPacket(uint16_t l) {
   }
 }
 
-
 void _btPrintHex8(uint8_t n) {
   if (n < 0x10) {
     Serial.print("0");
@@ -641,7 +608,6 @@ void _btPrintHex8(uint8_t n) {
   Serial.print(n, HEX);
   Serial.print(" ");
 }
-
 
 void _btPrintNumber(int n) {
   int i;

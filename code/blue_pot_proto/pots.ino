@@ -13,7 +13,6 @@
 #include <SD.h>
 #include <SerialFlash.h>
 
-
 // ==============================================================================
 // Pin assignments for AG1171 SLIC
 //
@@ -23,8 +22,6 @@ const int PIN_SHK = 4;             // Switch hook detection:
                                    //   Break: Low when on-hook (or dial pulse)
                                    //   Make : High when off-hook
 const int PIN_OFF_HOOK_LED = 13;   // LED output to indicate switch hook state visually
-
-
 
 // ==============================================================================
 // Constants
@@ -80,8 +77,6 @@ const float pots_dial_tone_ampl[4] = {0.5, 0.5, 0, 0};
 const float pots_no_service_tone_ampl[4] = {0.5, 0.5, 0, 0};
 const float pots_off_hook_tone_ampl[4] = {0.25, 0.25, 0.25, 0.25};
 
-
-
 // ==============================================================================
 // Variables
 //
@@ -121,8 +116,6 @@ typedef enum {TONE_IDLE, TONE_OFF, TONE_DIAL, TONE_NO_SERVICE_ON, TONE_NO_SERVIC
 pots_tone_stateT pots_tone_state;
 int pots_tone_period_count;       // Counts up evaluation cycles for tone states
 
-
-
 // ==============================================================================
 // Audio System
 //
@@ -157,8 +150,6 @@ AudioConnection          patchCord10(waveform3, 0, mixer1, 2);
 AudioConnection          patchCord11(waveform4, 0, mixer1, 3);
 AudioConnection          patchCord12(mixer1, dac1);
 
-
-
 // ==============================================================================
 // API Routines
 //
@@ -187,7 +178,6 @@ void potsInit() {
   pots_prev_evalT = millis();
 }
 
-
 /*
  * Evaluate POTS module - call repeatedly from loop() at a sub-millisecond rate
  */
@@ -209,7 +199,6 @@ void potsEval() {
   }
 }
 
-
 /*
  * Configure service level
  *   Set true to enable dial-tone generation indicating phone is in service
@@ -218,7 +207,6 @@ void potsEval() {
 void potsSetInService(bool en) {
   pots_in_service = en;
 }
-
 
 /*
  * Initiate or end ringing
@@ -241,7 +229,6 @@ void potsSetRing(bool en) {
   }
 }
 
-
 /*
  * Set call progress status
  *   Set true when a call is connected
@@ -250,7 +237,6 @@ void potsSetRing(bool en) {
 void potsSetInCall(bool en) {
   pots_in_call = en;
 }
-
 
 /*
  * Return true if a on-hook/off-hook transition was just detected
@@ -266,7 +252,6 @@ boolean potsHookChange(bool* offHook) {
   return false;
 }
 
-
 /*
  * Return true if a digit was just detected dialed
  *   digitNum set for dialed digit: 0 - 9, 10 = '*', 11 = '#'
@@ -281,8 +266,6 @@ boolean potsDigitDialed(int* digitNum) {
   return false;
 }
 
-
-
 // ==============================================================================
 // Internal Routines
 //
@@ -296,7 +279,6 @@ void _potsInitHardware() {
   pinMode(PIN_OFF_HOOK_LED, OUTPUT);
   digitalWrite(PIN_OFF_HOOK_LED, LOW);
 }
-
 
 void _potsInitAudio() {
   AudioMemory(6);
@@ -323,7 +305,6 @@ void _potsInitAudio() {
   mixer1.gain(3, 0);
 }
 
-
 // Updates current hook switch state
 //   returns true if the state changes, false otherwise
 bool _potsEvalHook() {
@@ -349,7 +330,6 @@ bool _potsEvalHook() {
 
   return changed_detected;
 }
-
 
 void _potsEvalPhoneState(bool hookChange) {
   switch (pots_state) {
@@ -399,7 +379,6 @@ void _potsEvalPhoneState(bool hookChange) {
       break;
   }
 }
-
 
 void _potsEvalRinger(bool hookChange) {
   if (hookChange && pots_cur_off_hook && (pots_ring_state != RING_IDLE)) {
@@ -452,7 +431,6 @@ void _potsEvalRinger(bool hookChange) {
   }
 }
 
-
 void _potsStartRing() {
   pots_ring_state = RING_PULSE_ON;
   pots_ring_period_count = POTS_RING_ON_MSEC / POTS_EVAL_MSEC;
@@ -461,13 +439,11 @@ void _potsStartRing() {
   digitalWrite(PIN_FR, LOW);   // Toggle the line (reverse) to start this pulse of the ring
 }
 
-
 void _potsEndRing() {
   pots_ring_state = RING_IDLE;
   digitalWrite(PIN_FR, HIGH);  // Make sure tip/ring are not reversed
   digitalWrite(PIN_RM, LOW);   // Exit ring mode
 }
-
 
 // Assumes that we'll only have one source (DTMF or rotary) dialing at a time
 // Returns true a digit was detected dialed
@@ -581,7 +557,6 @@ bool _potsEvalDialer(bool hookChange) {
   return digit_dialed_detected;
 }
 
-
 void _potsEvalTone(bool hookChange, bool digitDialed) {
   switch (pots_tone_state) {
     case TONE_IDLE:
@@ -689,7 +664,6 @@ void _potsEvalTone(bool hookChange, bool digitDialed) {
   }
 }
 
-
 //void _potsSetAudioOutput(pots_tone_stateT s) {
 void _potsSetAudioOutput(int s) {
   int i;
@@ -765,7 +739,6 @@ void _potsSetAudioOutput(int s) {
   AudioInterrupts();    // enable so tones will start together
 }
 
-
 // Returns -1 if no digit is found
 int _potsDtmfDigitFound() {
   int digit = -1;   // Set to a postive digit or value for non-numeric character if one is found
@@ -818,7 +791,6 @@ int _potsDtmfDigitFound() {
   return digit;
 }
 
-
 boolean _potsEvalTimeout() {
   unsigned long curT = millis();
   unsigned long deltaT;
@@ -837,3 +809,4 @@ boolean _potsEvalTimeout() {
 
   return false;
 }
+

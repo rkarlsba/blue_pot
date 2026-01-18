@@ -54,8 +54,6 @@
 //
 const int PIN_FUNC = 23;  // Active low on startup enable of BM64 EEPROM update mode (pulled-high)
 
-
-
 // ==============================================================================
 // Constants
 //
@@ -74,8 +72,6 @@ const int PIN_FUNC = 23;  // Active low on startup enable of BM64 EEPROM update 
 // EEPROM Locations
 #define EEP_DEV_ID  0
 
-
-
 // ==============================================================================
 // Variables
 //
@@ -89,14 +85,11 @@ int CmdValNum;
 boolean CmdHasVal;
 char CmdBuf[32];
 
-
 // Jumper detection
 bool transparentMode;
 
 // Device ID to pair with
 int pairID;
-
-
 
 // ==============================================================================
 // Arduino entry-points
@@ -125,7 +118,6 @@ void setup() {
   }
 }
 
-
 void loop() {
   if (transparentMode) {
     // Echo data between HOST USB and BM64
@@ -138,15 +130,12 @@ void loop() {
   }
 }
 
-
-
 // ==============================================================================
 // Command processor
 //
 void cmdInit() {
   CmdState = CMD_ST_IDLE;
 }
-
 
 void cmdEval() {
   char c;
@@ -226,7 +215,6 @@ void cmdEval() {
   }
 }
 
-
 boolean ValidateCommand(char c) {
   switch (c) {
     case 'D':
@@ -243,7 +231,6 @@ boolean ValidateCommand(char c) {
   }
 }
 
-
 // Returns -1 for invalid hex character, 0 - 15 for valid hex
 int IsValidHex(char c) {
   if ((c >= '0') && (c <= '9')) {
@@ -255,7 +242,6 @@ int IsValidHex(char c) {
   }
   return -1;
 }
-
 
 void ProcessCommand() {
   bool b;
@@ -306,7 +292,6 @@ void ProcessCommand() {
   }
 }
 
-
 void DisplayUsage() {
   Serial.print("Command Interface for version ");
   Serial.println(VERSION);
@@ -327,8 +312,6 @@ void DisplayUsage() {
   Serial.println("");
 }
 
-
-
 // ==============================================================================
 // EEPROM Storage
 //
@@ -342,3 +325,4 @@ void eepInit() {
 
   Serial.printf("pairID = %d\n", pairID);
 }
+
